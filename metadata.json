@@ -1,0 +1,6 @@
+{
+  "name": "Aura Distance",
+  "description": "A minimalist, precise distance converter supporting metric, imperial, and nautical units.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
