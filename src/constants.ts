@@ -1,30 +1,62 @@
-export enum UnitSystem {
-  METRIC = 'Metric',
-  IMPERIAL = 'Imperial',
-  NAUTICAL = 'Nautical',
+export enum UnitCategory {
+  DISTANCE = 'Distance',
+  WEIGHT = 'Weight',
+  TEMPERATURE = 'Temperature',
+  AREA = 'Area',
+  VOLUME = 'Volume',
 }
 
 export interface Unit {
   id: string;
   label: string;
   symbol: string;
-  factor: number; // Factor to convert to meters
-  system: UnitSystem;
+  factor: number; // Factor to convert to base unit
+  category: UnitCategory;
+  offset?: number; // Used for temperature (e.g., Celsius to Kelvin)
 }
 
-export const DISTANCE_UNITS: Unit[] = [
-  // Metric
-  { id: 'mm', label: 'Millimeters', symbol: 'mm', factor: 0.001, system: UnitSystem.METRIC },
-  { id: 'cm', label: 'Centimeters', symbol: 'cm', factor: 0.01, system: UnitSystem.METRIC },
-  { id: 'm', label: 'Meters', symbol: 'm', factor: 1, system: UnitSystem.METRIC },
-  { id: 'km', label: 'Kilometers', symbol: 'km', factor: 1000, system: UnitSystem.METRIC },
-  // Imperial
-  { id: 'in', label: 'Inches', symbol: 'in', factor: 0.0254, system: UnitSystem.IMPERIAL },
-  { id: 'ft', label: 'Feet', symbol: 'ft', factor: 0.3048, system: UnitSystem.IMPERIAL },
-  { id: 'yd', label: 'Yards', symbol: 'yd', factor: 0.9144, system: UnitSystem.IMPERIAL },
-  { id: 'mi', label: 'Miles', symbol: 'mi', factor: 1609.34, system: UnitSystem.IMPERIAL },
-  // Nautical
-  { id: 'nmi', label: 'Nautical Miles', symbol: 'nmi', factor: 1852, system: UnitSystem.NAUTICAL },
+// Base units: 
+// Distance: Meters (m)
+// Weight: Kilograms (kg)
+// Temperature: Kelvin (K)
+// Area: Square Meters (m²)
+// Volume: Liters (L)
+
+export const ALL_UNITS: Unit[] = [
+  // Distance (Base: Meters)
+  { id: 'mm', label: 'Millimeters', symbol: 'mm', factor: 0.001, category: UnitCategory.DISTANCE },
+  { id: 'cm', label: 'Centimeters', symbol: 'cm', factor: 0.01, category: UnitCategory.DISTANCE },
+  { id: 'm', label: 'Meters', symbol: 'm', factor: 1, category: UnitCategory.DISTANCE },
+  { id: 'km', label: 'Kilometers', symbol: 'km', factor: 1000, category: UnitCategory.DISTANCE },
+  { id: 'in', label: 'Inches', symbol: 'in', factor: 0.0254, category: UnitCategory.DISTANCE },
+  { id: 'ft', label: 'Feet', symbol: 'ft', factor: 0.3048, category: UnitCategory.DISTANCE },
+  { id: 'mi', label: 'Miles', symbol: 'mi', factor: 1609.34, category: UnitCategory.DISTANCE },
+
+  // Weight (Base: Kilograms)
+  { id: 'mg', label: 'Milligrams', symbol: 'mg', factor: 0.000001, category: UnitCategory.WEIGHT },
+  { id: 'g', label: 'Grams', symbol: 'g', factor: 0.001, category: UnitCategory.WEIGHT },
+  { id: 'kg', label: 'Kilograms', symbol: 'kg', factor: 1, category: UnitCategory.WEIGHT },
+  { id: 'oz', label: 'Ounces', symbol: 'oz', factor: 0.0283495, category: UnitCategory.WEIGHT },
+  { id: 'lb', label: 'Pounds', symbol: 'lb', factor: 0.453592, category: UnitCategory.WEIGHT },
+  { id: 't', label: 'Metric Tons', symbol: 't', factor: 1000, category: UnitCategory.WEIGHT },
+
+  // Temperature (Base: Kelvin)
+  { id: 'c', label: 'Celsius', symbol: '°C', factor: 1, offset: 273.15, category: UnitCategory.TEMPERATURE },
+  { id: 'f', label: 'Fahrenheit', symbol: '°F', factor: 5/9, offset: 273.15 - (32 * 5/9), category: UnitCategory.TEMPERATURE },
+  { id: 'k', label: 'Kelvin', symbol: 'K', factor: 1, offset: 0, category: UnitCategory.TEMPERATURE },
+
+  // Area (Base: Square Meters)
+  { id: 'sq-cm', label: 'Square Centimeters', symbol: 'cm²', factor: 0.0001, category: UnitCategory.AREA },
+  { id: 'sq-m', label: 'Square Meters', symbol: 'm²', factor: 1, category: UnitCategory.AREA },
+  { id: 'sq-km', label: 'Square Kilometers', symbol: 'km²', factor: 1000000, category: UnitCategory.AREA },
+  { id: 'sq-ft', label: 'Square Feet', symbol: 'ft²', factor: 0.092903, category: UnitCategory.AREA },
+  { id: 'acre', label: 'Acres', symbol: 'ac', factor: 4046.86, category: UnitCategory.AREA },
+
+  // Volume (Base: Liters)
+  { id: 'ml', label: 'Milliliters', symbol: 'ml', factor: 0.001, category: UnitCategory.VOLUME },
+  { id: 'l', label: 'Liters', symbol: 'l', factor: 1, category: UnitCategory.VOLUME },
+  { id: 'gal', label: 'Gallons (US)', symbol: 'gal', factor: 3.78541, category: UnitCategory.VOLUME },
+  { id: 'cup', label: 'Cups (US)', symbol: 'cup', factor: 0.236588, category: UnitCategory.VOLUME },
 ];
 
 export interface CommonConversion {
@@ -33,35 +65,40 @@ export interface CommonConversion {
   fromUnit: string;
   toUnit: string;
   description: string;
+  category: UnitCategory;
 }
 
 export const COMMON_CONVERSIONS: CommonConversion[] = [
   {
-    title: 'Marathon Distance',
+    title: 'Marathon',
     value: 42.195,
     fromUnit: 'km',
     toUnit: 'mi',
-    description: 'The standard length of a marathon race.',
+    category: UnitCategory.DISTANCE,
+    description: 'Standard long-distance race.',
   },
   {
-    title: 'Earth Circumference',
-    value: 40075,
-    fromUnit: 'km',
-    toUnit: 'mi',
-    description: 'Equatorial circumference of the Earth.',
+    title: 'Room Temp',
+    value: 20,
+    fromUnit: 'c',
+    toUnit: 'f',
+    category: UnitCategory.TEMPERATURE,
+    description: 'Comfortable indoor temperature.',
   },
   {
-    title: 'Football Field',
-    value: 100,
-    fromUnit: 'yd',
-    toUnit: 'm',
-    description: 'Length of an American football field (excluding end zones).',
+    title: 'Standard Weight',
+    value: 1,
+    fromUnit: 'kg',
+    toUnit: 'lb',
+    category: UnitCategory.WEIGHT,
+    description: 'Basic metric to imperial mass conversion.',
   },
   {
-    title: 'Tower of Paris (Eiffel)',
-    value: 330,
-    fromUnit: 'm',
-    toUnit: 'ft',
-    description: 'Height of the Eiffel Tower including antenna.',
+    title: 'Typical Acre',
+    value: 1,
+    fromUnit: 'acre',
+    toUnit: 'sq-m',
+    category: UnitCategory.AREA,
+    description: 'Common plot size measurement.',
   },
 ];

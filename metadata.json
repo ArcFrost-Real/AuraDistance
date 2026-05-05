@@ -1,6 +1,6 @@
 {
-  "name": "Aura Distance",
-  "description": "A minimalist, precise distance converter supporting metric, imperial, and nautical units.",
+  "name": "Aura Conversion",
+  "description": "A sophisticated multi-category unit converter for distance, weight, temperature, area, and volume.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

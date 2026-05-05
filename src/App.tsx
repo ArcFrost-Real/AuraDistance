@@ -38,7 +38,7 @@ export default function App() {
               className="inline-block"
             >
               <span className="px-3 py-1 bg-brand text-surface text-[10px] font-bold uppercase tracking-[0.2em] rounded-full">
-                Utility / Dist
+                Universal / Conversion
               </span>
             </motion.div>
             <motion.h1 
@@ -47,7 +47,7 @@ export default function App() {
               transition={{ delay: 0.1 }}
               className="text-4xl md:text-5xl font-light tracking-tight text-brand"
             >
-              Aura <span className="font-semibold text-brand/30">Distance</span>
+              Aura <span className="font-semibold text-brand/30">Conversion</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -55,7 +55,7 @@ export default function App() {
               transition={{ delay: 0.2 }}
               className="text-sm text-brand/40 max-w-sm mx-auto font-medium"
             >
-              Precision conversion between scientific and everyday measurement systems.
+              A comprehensive toolkit for seamless unit transformation across all major systems.
             </motion.p>
           </div>
 
